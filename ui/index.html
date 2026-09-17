@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Voice Lab｜本機聲音研究工具</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">VOICE LAB 0.1</p>
+      <h1>本機聲音研究工具</h1>
+      <p class="muted">第一版先完成素材整理與 WAV 輸出；不會自動下載大型模型。</p>
+    </div>
+    <div id="readyBadge" class="badge">檢查中</div>
+  </header>
+
+  <main class="layout">
+    <section class="hero card">
+      <div>
+        <p class="eyebrow">目前工作階段</p>
+        <h2 id="projectTitle">尚未建立研究專案</h2>
+        <p id="projectHint" class="muted">先建立專案，再登記要處理的本機音檔。</p>
+      </div>
+      <div class="hero-actions">
+        <button id="refreshBtn" class="button secondary">重新檢查</button>
+        <button id="diagnosisBtn" class="button secondary">查看最近 Log</button>
+      </div>
+    </section>
+
+    <section class="grid two">
+      <article class="card">
+        <div class="section-heading"><span class="step">1</span><div><h2>建立專案</h2><p>只保存設定，不會下載模型。</p></div></div>
+        <form id="projectForm">
+          <label>專案名稱<input id="projectName" required placeholder="例如：中文聲音研究"></label>
+          <div class="inline-fields"><label>語言<input id="language" value="中文"></label><label>聲音代號<input id="voiceCode" value="voice-01"></label></div>
+          <button class="button primary" type="submit">建立或更新專案</button>
+        </form>
+      </article>
+
+      <article class="card">
+        <div class="section-heading"><span class="step">2</span><div><h2>環境檢查</h2><p>沒有模型也可以先使用本機音訊流程。</p></div></div>
+        <div id="checks" class="check-list"><p class="muted">正在讀取檢查結果…</p></div>
+        <p class="notice">模型政策：大小超過 4 GiB 一律禁止下載；第一版不自動下載任何模型。</p>
+      </article>
+    </section>
+
+    <section class="card">
+      <div class="section-heading"><span class="step">3</span><div><h2>登記與檢查音檔</h2><p>請輸入本機完整路徑，例如 <code>D:\\VoiceLabData\\source.m4a</code>。瀏覽器不會替你上傳到網路。</p></div></div>
+      <form id="sourceForm" class="source-form">
+        <label class="path-field">本機音檔或影片路徑<input id="sourcePath" required placeholder="C:\\資料\\錄音.m4a"></label>
+        <div class="button-row"><button class="button secondary" type="submit" data-action="register">登記檔案</button><button class="button secondary" type="submit" data-action="inspect">檢查媒體資訊</button></div>
+      </form>
+      <pre id="mediaResult" class="result" aria-live="polite">尚未執行。</pre>
+    </section>
+
+    <section class="card">
+      <div class="section-heading"><span class="step">4</span><div><h2>裁切／輕度清理並輸出 WAV</h2><p>第一版只做固定格式 WAV；模型訓練與聲音轉換尚未接入。</p></div></div>
+      <form id="wavForm" class="wav-form">
+        <label>起始秒數<input id="startSeconds" type="number" min="0" step="0.1" value="0"></label>
+        <label>片段秒數<input id="durationSeconds" type="number" min="2" max="1800" step="0.1" placeholder="留白代表整段"></label>
+        <label>版本<select id="preset"><option value="original">原音轉 WAV</option><option value="light">輕度清理後轉 WAV</option></select></label>
+        <button class="button primary" type="submit">產生 WAV</button>
+      </form>
+      <pre id="wavResult" class="result" aria-live="polite">尚未產生。</pre>
+    </section>
+
+    <section class="card muted-panel">
+      <div class="section-heading"><span class="step">5</span><div><h2>模型功能狀態</h2><p>這一版先保留入口，避免下載超過 4 GiB 的模型。</p></div></div>
+      <div class="future-grid"><div><strong>文字配音 TTS</strong><span>待模型環境與短句測試</span></div><div><strong>錄音換聲 VC</strong><span>待模型環境與小型訓練</span></div><div><strong>診斷 Log</strong><span>目前即可使用</span></div></div>
+    </section>
+
+    <section class="card">
+      <div class="section-heading"><span class="step">Log</span><div><h2>最近執行紀錄</h2><p>失敗時可把 run-id 與診斷摘要交回 LLM。</p></div></div>
+      <div id="runs" class="runs"><p class="muted">尚無執行紀錄。</p></div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="/static/app.js"></script>
+</body>
+</html>
